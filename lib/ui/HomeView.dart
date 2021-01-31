@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:saviaapp/common/DrawerMenu.dart';
+import 'package:saviaapp/common/constant.dart';
 import 'package:saviaapp/controller/HomeController.dart';
 
 class HomeView extends StatefulWidget {
@@ -13,26 +15,38 @@ class _HomeViewState extends State<HomeView> {
 
   HomeController controller = Get.put(HomeController());
   final CameraPosition _center = CameraPosition(target: LatLng(6.30206347, -75.54163412), zoom: 14);
+  final GlobalKey<ScaffoldState> _homeKey = new GlobalKey<ScaffoldState>();
+
 
   @override
   void initState() {
-    getLocationUser();
+    _determinePosition();
     super.initState();
   }
 
-  void getLocationUser() async {
-    try {
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission != LocationPermission.always || permission != LocationPermission.whileInUse) {
-        Geolocator.requestPermission().whenComplete(() {
-          getPositions();
-        });
-      } else {
-        getPositions();
-      }
-    } catch (e) {
-      printError(info: e);
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
     }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permantly denied, we cannot request permissions.');
+    } 
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        return Future.error(
+            'Location permissions are denied (actual value: $permission).');
+      }
+    } 
+    return await Geolocator.getCurrentPosition();
   }
 
   Future<void> getPositions() async {
@@ -52,6 +66,11 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _homeKey,
+      drawer: Theme(
+        data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+          child: DraweMenu()
+      ),
       body: Container(
         child: Stack(
           children: [
@@ -62,7 +81,7 @@ class _HomeViewState extends State<HomeView> {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
-                }
+                }  
                 if (snapshot.data != LocationPermission.whileInUse){
                   return Padding(
                     padding: const EdgeInsets.all(20.0),
@@ -85,7 +104,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   );
                 }
-                getLocationUser();
+                _determinePosition();
                 return Obx(
                   () => GoogleMap(
                         mapType: MapType.normal,
@@ -97,7 +116,30 @@ class _HomeViewState extends State<HomeView> {
                       )
                    );
               }
-            )
+            ),
+
+            Positioned(
+              top: 70,
+              left: 0,
+              child: MaterialButton(
+                onPressed: () => _homeKey.currentState.openDrawer(),
+                color: Colors.white,
+                textColor: Colors.black,
+                child: Hero(
+                    tag: "menu",
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Icon(
+                          Icons.menu,
+                          color: Constants.Jade,
+                          size: 30,
+                        ),
+                    )
+                ),
+                padding: EdgeInsets.all(10),
+                shape: CircleBorder(),
+              ),
+            ),
           ],
         ),
       ),

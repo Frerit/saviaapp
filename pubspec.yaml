@@ -30,6 +30,7 @@ dependencies:
   google_maps_flutter: ^1.0.3
   geolocator: ^6.1.0
   cupertino_icons: ^1.0.0
+  flutter_calendar_carousel: ^1.5.2
 
 dev_dependencies:
   flutter_test:

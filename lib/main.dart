@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
           return GetMaterialApp(
             title: 'Flutter Demo',
             theme: ThemeData(
-              primarySwatch: Colors.blue,
+              primarySwatch: Colors.teal,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
             initialRoute: "/",
