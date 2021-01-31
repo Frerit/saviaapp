@@ -40,6 +40,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028115043693:android:4a89b46ffa2dce31f33664",
+        "android_client_info": {
+          "package_name": "co.com.savia.saviaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1028115043693-b37ebrstf5g9n52k5uvieksa7tgsl1oc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZ-EtZYMj4SSSjFWpQuFsxwu13T60kZnw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1028115043693-b37ebrstf5g9n52k5uvieksa7tgsl1oc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1028115043693-rsv9f6jjhlhe5gdjoti6ep7a1tph6qg6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "co.com.savia.appp"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
